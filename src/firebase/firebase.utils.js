@@ -12,6 +12,31 @@ const config = {
     measurementId: "G-RRC14RN58Y"
 };
 
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+  if (!userAuth) return;
+
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+
+  const snapShot = await userRef.get();
+//vv checa si hay data y sino crea un nuevo usuario//
+  if(!snapShot.exists) {
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
+
+    try{
+      await userRef.set({
+        displayName,
+        email,
+        createdAt,
+        ...additionalData
+      })
+    }catch (error){
+      console.log('error creating user', error.message);
+    }
+  }
+  return userRef;
+}
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();

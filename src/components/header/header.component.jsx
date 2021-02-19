@@ -1,11 +1,14 @@
 import React from 'react';
-import {connect} from 'react-redux';
-
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+
 
 import { auth } from '../../firebase/firebase.utils';
 import CartIcon from '../cart-icon/cart-icon.component';
 import CartDropdown from '../cart-dropdown/cart-dropdown.component';
+import { selectCartHidden } from '../../redux/cart/cart.selector';
+import { selectCurrentUser } from '../../redux/user/user.selector';
 
 import {ReactComponent as Logo } from '../../assets/crown.svg';
 
@@ -39,9 +42,9 @@ const Header = ({ currentUser, hidden }) => (
   </div>
   );
 //vvv destructure we want the user and of the user qwe want te curren USer, this is the syntax when you want to destructure nested values. en otra palabras dame {este valor} of the user, que al mismo tiempo esta siendo deconstruido del state//
-const mapStateToProps = ({user: { currentUser },cart: { hidden }}) => ({
-  currentUser,
-  hidden
+const mapStateToProps =  createStructuredSelector({
+  currentUser: selectCurrentUser,
+  hidden: selectCartHidden
 });
 
 export default connect(mapStateToProps)(Header);
